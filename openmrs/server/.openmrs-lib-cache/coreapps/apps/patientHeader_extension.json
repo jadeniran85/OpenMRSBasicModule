@@ -1,0 +1,18 @@
+[
+    {
+        "id": "org.openmrs.module.coreapps.patientHeader.secondLineFragments.activeVisitStatus",
+        "extensionPointId": "patientHeader.secondLineFragments",
+        "extensionParams": {
+            "provider": "coreapps",
+            "fragment": "patientheader/activeVisitStatus"
+        }
+    },
+    {
+        "id": "org.openmrs.module.coreapps.patientHeader.secondLineFragments.stickyNote",
+        "extensionPointId": "patientHeader.secondLineFragments",
+        "extensionParams": {
+            "provider": "coreapps",
+            "fragment": "stickyNote"
+        }
+    }
+]

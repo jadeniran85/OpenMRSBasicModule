@@ -1,0 +1,12 @@
+[
+    {
+        "id": "referenceapplication.manageScheduler",
+        "extensionPointId": "systemAdministration.apps",
+        "type": "link",
+        "label": "referenceapplication.app.manageScheduler.title",
+        "url": "owa/SystemAdministration/index.html#/task-view",
+        "icon": "icon-time",
+        "order": 0,
+        "requiredPrivilege": "App: referenceapplication.manageScheduler"
+    }
+]

@@ -1,0 +1,19 @@
+[
+    {
+        "id": "chartsearch.chartSearchApp",
+        "description": "chartsearch.refApp.description",
+        "order": 10,
+        "extensions": [
+            {
+                "id": "chartsearch.launcheManager",
+                "extensionPointId": "systemAdministration.apps",
+                "type": "link",
+                "order": 10,
+                "label": "chartsearch.chartSearch",
+                "url": "chartsearch/chartSearchManager.page",
+                "icon": "icon-search",
+                "requiredPrivilege": "Task: Chart Search"
+            }
+        ]
+    }
+]

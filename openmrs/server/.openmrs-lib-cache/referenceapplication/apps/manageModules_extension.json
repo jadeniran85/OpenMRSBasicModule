@@ -1,0 +1,12 @@
+[
+    {
+        "id": "referenceapplication.manageModules",
+        "extensionPointId": "systemAdministration.apps",
+        "type": "link",
+        "label": "referenceapplication.app.manageModules.title",
+        "url": "owa/SystemAdministration/index.html#/module-show",
+        "icon": "icon-th-large",
+        "order": 0,
+        "requiredPrivilege": "App: referenceapplication.manageModules"
+    }
+]

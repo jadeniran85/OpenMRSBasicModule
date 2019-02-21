@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes -->
+
+	<changeSet id="1" author="Eli">
+		<comment>added synonym table</comment>
+		<createTable tableName="chartsearch_synonyms">
+			<column name="group_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+
+	<changeSet id="2" author="Eli">
+		<comment>added synonym groups table and a foreign key</comment>
+		<createTable tableName="chartsearch_synonym_groups">
+			<column name="group_id" type="int">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="group_name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="is_category" type="boolean" defaultValueBoolean="false" />
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="fk_synonymgroups_synonyms"
+			baseTableName="chartsearch_synonyms" baseColumnNames="group_id"
+			referencedTableName="chartsearch_synonym_groups"
+			referencedColumnNames="group_id" onDelete="CASCADE" onUpdate="RESTRICT" />
+	</changeSet>
+
+	<changeSet id="3" author="Eli">
+		<comment>Added synonym_id column</comment>
+		<addColumn tableName="chartsearch_synonyms">
+			<column name="synonym_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="4" author="Eli">
+		<comment>Changed cascade options</comment>
+		<addForeignKeyConstraint constraintName="fk_synonymgroups_synonyms_cascade"
+			baseTableName="chartsearch_synonyms" baseColumnNames="group_id"
+			referencedTableName="chartsearch_synonym_groups"
+			referencedColumnNames="group_id" onDelete="CASCADE" onUpdate="CASCADE" />
+	</changeSet>
+
+	<changeSet id="CSM-58-18062014-2207" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="chartsearch_categories" />
+			</not>
+		</preConditions>
+		<comment>
+			Create chartsearch_categories table
+		</comment>
+		<createTable tableName="chartsearch_categories">
+			<column name="category_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="filter_query" type="varchar(255)"></column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="CSM-58-18062014-2210" author="k-joseph">
+		<comment>Adding category filters for all existing concept classes
+		</comment>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Test" />
+			<column name="filter_query" value="concept_class_name:Test" />
+			<column name="description" value="Category item for filtering Test" />
+			<column name="uuid" value="3918-2910-4245-84f4-a9f38648ac60" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Procedure" />
+			<column name="filter_query" value="concept_class_name:Procedure" />
+			<column name="description" value="Category item for filtering Procedure" />
+			<column name="uuid" value="66b0e726-a280-4d42-ada3-42bc111f68d6" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Drug" />
+			<column name="filter_query" value="concept_class_name:Drug" />
+			<column name="description" value="Category item for filtering Drug" />
+			<column name="uuid" value="35cdafb5-5f6b-4c79-89e4-7226bea70ba9" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Diagnosis" />
+			<column name='filter_query' value='concept_class_name:Diagnosis' />
+			<column name="description" value="Category item for filtering Diagnosis" />
+			<column name="uuid" value="a458cbba-fb5d-4e5f-b0da-bfab122860a8" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Finding" />
+			<column name="filter_query" value='concept_class_name:Finding' />
+			<column name="description" value="Category item for filtering Finding" />
+			<column name="uuid" value="fc29ada4-0e00-4450-905c-e2982a242df2" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Anatomy" />
+			<column name="filter_query" value="concept_class_name:Anatomy" />
+			<column name="description" value="Category item for filtering Anatomy" />
+			<column name="uuid" value="290c0ddd-3aad-4718-addf-3d1d33f7ae5e" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Question" />
+			<column name="filter_query" value="concept_class_name:Question" />
+			<column name="description" value="Category item for filtering Question" />
+			<column name="uuid" value="0717136a-5c5f-4d68-b099-cbf1ad820363" />
+		</insert>
+
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="LabSet" />
+			<column name="filter_query" value="concept_class_name:LabSet" />
+			<column name="description" value="Category item for filtering LabSet" />
+			<column name="uuid" value="e68bb6ff-8b11-48e0-b259-703ffbdf4123" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="MedSet" />
+			<column name="filter_query" value="concept_class_name:MedSet" />
+			<column name="description" value="Category item for filtering MedSet" />
+			<column name="uuid" value="d90cb961-42c3-4dd8-93f1-d9d3bff09866" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="ConvSet" />
+			<column name="filter_query" value="concept_class_name:ConvSet" />
+			<column name="description" value="Category item for filtering ConvSet" />
+			<column name="uuid" value="c7cd56a5-62a3-4da5-a2ec-7b2390b31c7b" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Misc" />
+			<column name="filter_query" value="concept_class_name:Misc" />
+			<column name="description" value="Category item for filtering Misc" />
+			<column name="uuid" value="9159716d-120b-48c7-9d83-a954430b4362" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Symptom" />
+			<column name="filter_query" value="concept_class_name:Symptom" />
+			<column name="description" value="Category item for filtering Symptom" />
+			<column name="uuid" value="113f71f4-e1c0-4548-97df-1fca64f4b011" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Symptom/Finding" />
+			<column name="filter_query" value='concept_class_name:"Symptom/Finding"' />
+			<column name="description" value="Category item for filtering Symptom/Finding" />
+			<column name="uuid" value="b5611ebc-4ceb-40ed-8142-61d42967b87f" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Specimen" />
+			<column name="filter_query" value="concept_class_name:Specimen" />
+			<column name="description" value="Category item for filtering Specimen" />
+			<column name="uuid" value="4d280790-c856-4ebb-974b-4b1bd0684302" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Misc Order" />
+			<column name="filter_query" value='concept_class_name:"Misc Order"' />
+			<column name="description" value="Category item for filtering Misc Order" />
+			<column name="uuid" value="952ae740-b9d4-49ed-856c-500bc8e2a381" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Frequency" />
+			<column name="filter_query" value="concept_class_name:Frequency" />
+			<column name="description" value="Category item for filtering Frequency" />
+			<column name="uuid" value="21ac0fec-947f-4a76-aeee-2e17d9d0cb13" />
+		</insert>
+	</changeSet>
+
+	<changeSet id="CSM-102_28052015_1742" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="chartsearch_history" />
+			</not>
+		</preConditions>
+		<comment>
+			Create chartsearch_history table
+		</comment>
+		<createTable tableName="chartsearch_history">
+			<column name="search_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="search_phrase" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="last_searched_at" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="patient_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="history_owner-fk"
+			baseTableName="chartsearch_history" baseColumnNames="user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="history_patient-fk"
+			baseTableName="chartsearch_history" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+	</changeSet>
+
+	<changeSet id="CSM-81_02062015_1446" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="chartsearch_bookmark" />
+			</not>
+		</preConditions>
+		<comment>
+			Create chartsearch_bookmark table
+		</comment>
+		<createTable tableName="chartsearch_bookmark">
+			<column name="bookmark_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="bookmark_name" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="search_phrase" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="selected_categories" type="text">
+				<constraints nullable="true" />
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="patient_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="bookmark_owner-fk"
+			baseTableName="chartsearch_bookmark" baseColumnNames="user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="bookmark_patient-fk"
+			baseTableName="chartsearch_bookmark" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+	</changeSet>
+
+	<changeSet id="CSM-90_04062015_2012" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="chartsearch_note" />
+			</not>
+		</preConditions>
+		<comment>
+			Create chartsearch_note table
+		</comment>
+		<createTable tableName="chartsearch_note">
+			<column name="note_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="comment" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="search_phrase" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="priority" type="text">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_or_last_modified_at" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+			</column>
+			<column name="display_color" type="char(10)">
+				<constraints nullable="true" />
+			</column>
+			<column name="user_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="patient_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="note_owner-fk"
+			baseTableName="chartsearch_note" baseColumnNames="user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="note_patient-fk"
+			baseTableName="chartsearch_note" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+	</changeSet>
+
+	<changeSet id="CSM-103_11062015_1634" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="chartsearch_bookmark" />
+		</preConditions>
+		<comment>Added default_search column</comment>
+		<addColumn tableName="chartsearch_bookmark">
+			<column name="default_search" type="boolean"
+				defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="CSM-103_22062015_1941" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="chartsearch_history"
+				columnName="uuid" />
+			<columnExists tableName="chartsearch_bookmark"
+				columnName="uuid" />
+			<columnExists tableName="chartsearch_note" columnName="uuid" />
+		</preConditions>
+		<comment>
+			Rename uuid to history_uuid, bookmark_uuid, note_uuid
+			respectively
+		</comment>
+		<renameColumn tableName="chartsearch_history"
+			oldColumnName="uuid" newColumnName="history_uuid" columnDataType="char(38)" />
+		<renameColumn tableName="chartsearch_bookmark"
+			oldColumnName="uuid" newColumnName="bookmark_uuid" columnDataType="char(38)" />
+		<renameColumn tableName="chartsearch_note" oldColumnName="uuid"
+			newColumnName="note_uuid" columnDataType="char(38)" />
+	</changeSet>
+
+	<changeSet id="CSM-98-23062015-0037" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<foreignKeyConstraintExists
+				foreignKeyName="fk_synonymgroups_synonyms" />
+			<foreignKeyConstraintExists
+				foreignKeyName="fk_synonymgroups_synonyms_cascade" />
+		</preConditions>
+		<comment>Dropping both fk_synonymgroups_synonyms and
+			fk_synonymgroups_synonyms_cascade foreign keys
+		</comment>
+		<dropForeignKeyConstraint baseTableName="chartsearch_synonyms"
+			constraintName="fk_synonymgroups_synonyms" />
+		<dropForeignKeyConstraint baseTableName="chartsearch_synonyms"
+			constraintName="fk_synonymgroups_synonyms_cascade" />
+	</changeSet>
+
+	<changeSet id="CSM-98-23062015-1440" author="k-joseph">
+		<preConditions>
+			<tableExists tableName="chartsearch_synonyms" />
+		</preConditions>
+		<comment>Re-create chartsearch_synonyms table which is not yet being
+			used
+		</comment>
+		<dropTable tableName="chartsearch_synonyms" />
+		<createTable tableName="chartsearch_synonyms">
+			<column name="synonym_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="group_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="fk_synonymgroups_synonyms"
+			baseTableName="chartsearch_synonyms" baseColumnNames="group_id"
+			referencedTableName="chartsearch_synonym_groups"
+			referencedColumnNames="group_id" onDelete="CASCADE" onUpdate="CASCADE" />
+	</changeSet>
+
+	<changeSet id="CSM-91-07072015-1826" author="k-joseph">
+		<comment>Adding category filters Pharmacologic Drug Class and Units of
+			Measure
+		</comment>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Pharmacology" />
+			<column name="filter_query" value='concept_class_name:"Pharmacologic Drug Class"' />
+			<column name="description"
+				value="Category item for filtering medications based on pharmacologic properties as opposed to therapeutic properties" />
+			<column name="uuid" value="663f91a0-24bd-11e5-b345-feff819cdc9f" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Units" />
+			<column name="filter_query" value='concept_class_name:"Units of Measure"' />
+			<column name="description"
+				value="Category item for filtering prescription and dispensation units" />
+			<column name="uuid" value="663f961e-24bd-11e5-b345-feff819cdc9f" />
+		</insert>
+	</changeSet>
+	<changeSet id="CSM-111_17072015_1513" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="chartsearch_history"
+				columnName="history_uuid" />
+			<columnExists tableName="chartsearch_bookmark"
+				columnName="bookmark_uuid" />
+			<columnExists tableName="chartsearch_note" columnName="note_uuid" />
+		</preConditions>
+		<comment>
+			Re-Renaming history_uuid , bookmark_uuid and note_uuid
+			to uuid
+		</comment>
+		<renameColumn tableName="chartsearch_history"
+			oldColumnName="history_uuid" newColumnName="uuid" columnDataType="char(38)" />
+		<renameColumn tableName="chartsearch_bookmark"
+			oldColumnName="bookmark_uuid" newColumnName="uuid" columnDataType="char(38)" />
+		<renameColumn tableName="chartsearch_note" oldColumnName="note_uuid"
+			newColumnName="uuid" columnDataType="char(38)" />
+	</changeSet>
+
+	<changeSet id="CSM-95_28072015_1241" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="chartsearch_preference" />
+			</not>
+		</preConditions>
+		<comment>
+			Create chartsearch_preferences table
+		</comment>
+		<createTable tableName="chartsearch_preference">
+			<column name="preference_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_history" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_bookmark" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_notes" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_duplicateresults" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_multiplefiltering" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_quicksearches" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="enable_defaultsearch" type="boolean"
+				defaultValueNumeric="1">
+				<constraints nullable="false" />
+			</column>
+			<column name="personalnotes_colors" type="varchar(255)" />
+			<column name="user_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="preference_owner-fk"
+			baseTableName="chartsearch_preference" baseColumnNames="user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="CSM-95_29072015_1239" author="k-joseph">
+		<comment>Adding default preferences for daemon user
+		</comment>
+		<insert tableName="chartsearch_preference">
+			<column name="uuid" value="949e76d2-3571-11e5-a151-feff819cdc9f" />
+			<column name="enable_history" value="1" />
+			<column name="enable_bookmark" value="1" />
+			<column name="enable_notes" value="1" />
+			<column name="enable_duplicateresults" value="1" />
+			<column name="enable_multiplefiltering" value="1" />
+			<column name="enable_quicksearches" value="1" />
+			<column name="enable_defaultsearch" value="1" />
+			<column name="personalnotes_colors" value="" />
+			<column name="user_id" value="2" />
+		</insert>
+	</changeSet>
+
+	<changeSet id="CSM-113_31072015_1224" author="k-joseph">
+		<comment>Enable duplicate and Enable Multiple filtering should be set
+			to false by default
+		</comment>
+		<update tableName="chartsearch_preference">
+			<column name="enable_duplicateresults" value="0" />
+			<where>user_id=2</where>
+		</update>
+		<update tableName="chartsearch_preference">
+			<column name="enable_multiplefiltering" value="0" />
+			<where>user_id=2</where>
+		</update>
+	</changeSet>
+
+	<changeSet id="CSM-95_01082015_23:38" author="k-joseph">
+		<comment>Adding display_name column onto chartsearch_categories table
+		</comment>
+		<addColumn tableName="chartsearch_categories">
+			<column name="display_name" type="varchar(50)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="CSM-95_02082015_1517" author="k-joseph">
+		<comment>Save allergies and appointments category filters
+		</comment>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Allergies" />
+			<column name="filter_query" value="none" />
+			<column name="description" value="Category filter item for Patient Allergies" />
+			<column name="uuid" value="dc33c2c0-3910-11e5-a151-feff819cdc9f" />
+		</insert>
+		<insert tableName="chartsearch_categories">
+			<column name="name" value="Appointments" />
+			<column name="filter_query" value="none" />
+			<column name="description" value="Category filter item for Patient Appointments" />
+			<column name="uuid" value="dc33c630-3910-11e5-a151-feff819cdc9f" />
+		</insert>
+	</changeSet>
+
+	<changeSet id="CSM-95_03082015_0101" author="k-joseph">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="chartsearch_categories"
+				columnName="display_name" />
+			<not>
+				<tableExists tableName="chartsearch_category_displayname" />
+			</not>
+		</preConditions>
+
+		<comment>Dropping display_name it from chartsearch_categories table
+			and creating a resolving table
+		</comment>
+
+		<dropColumn tableName="chartsearch_categories" columnName="display_name" />
+
+		<createTable tableName="chartsearch_category_displayname">
+			<column name="displayname_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+			</column>
+			<column name="diplay_name" type="varchar(15)">
+				<constraints nullable="false" />
+			</column>
+			<column name="preference_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="category_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="categtory_displayname-fk"
+			baseTableName="chartsearch_category_displayname" baseColumnNames="preference_id"
+			referencedTableName="chartsearch_preference" referencedColumnNames="preference_id" />
+		<addForeignKeyConstraint constraintName="displayname_owner-fk"
+			baseTableName="chartsearch_category_displayname" baseColumnNames="category_id"
+			referencedTableName="chartsearch_categories" referencedColumnNames="category_id" />
+	</changeSet>
+</databaseChangeLog>
